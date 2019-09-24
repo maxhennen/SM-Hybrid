@@ -1,4 +1,4 @@
-# flutter_app2
+# silent_disco
 
 A new Flutter application.
 
