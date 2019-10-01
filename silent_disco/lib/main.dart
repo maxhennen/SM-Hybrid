@@ -1,114 +1,85 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'package:silent_disco/ListenerEventsPage.dart';
 
-void main() => runApp(MyApp());
-
+void main() {
+  runApp(new MyApp());
+}
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Startup Name Generator',
-      theme: ThemeData(          // Add the 3 lines from here...
-        primaryColor: Colors.white,
+    return new MaterialApp(
+      title: 'Generated App',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xFF2196f3),
+        accentColor: const Color(0xFF2196f3),
+        canvasColor: const Color(0xFFfafafa),
       ),
-      home: RandomWords(),
+      home: new MyHomePage(),
     );
   }
 }
 
-class RandomWordsState extends State<RandomWords> {
-  // TODO Add build() method
-  final List<WordPair> _suggestions = new List<WordPair>();
-  final Set<WordPair> _saved = Set<WordPair>();
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Startup Name Generator'),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved)
-        ]
-      ),
-      body: _buildSuggestions(),
-    );
-  }
-
-  void _pushSaved(){
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          final Iterable<ListTile> tiles = _saved.map(
-                  (WordPair pair) {
-                return ListTile(
-                  title: Text(
-                    pair.asPascalCase,
-                    style: _biggerFont,
-                  ),
-                );
-              }
-          );
-          final List<Widget> divided = ListTile
-              .divideTiles(
-            context: context,
-            tiles: tiles,
-          )
-              .toList();
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Saved Suggestions'),
-            ),
-            body: ListView(children: divided),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSuggestions() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return Divider(); /*2*/
-
-          final index = i ~/ 2; /*3*/
-          if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10)); /*4*/
-          }
-          return _buildRow(_suggestions[index]);
-        });
-  }
-
-  Widget _buildRow(WordPair pair) {
-    final bool alreadySaved = _saved.contains(pair);
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-      trailing: Icon(   // Add the lines from here...
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap:(){
-        setState(() {
-          if(alreadySaved) {
-            _saved.remove(pair);
-          }else{
-            _saved.add(pair);
-          }
-        });
-      }
-    );
-  }
+  _MyHomePageState createState() => new _MyHomePageState();
 }
 
-class RandomWords extends StatefulWidget {
+class _MyHomePageState extends State<MyHomePage> {
   @override
-  RandomWordsState createState() => RandomWordsState();
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text('App Name'),
+
+      ),
+      body:
+            new Center(
+              child:
+              new Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    new Text(
+                      "Are you a DJ?"
+                    ),
+                    new IconButton(
+                      icon: const Icon(Icons.insert_emoticon),
+                      onPressed:djButtonPressed,
+                      iconSize: 48.0,
+                      color: const Color(0xFF000000),
+                    ),
+                    new Divider(color: Colors.black),
+                    new Text(
+                        "Or a Listener?"
+                    ),
+                    new IconButton(
+                      icon: const Icon(Icons.insert_emoticon),
+                      onPressed:listenerButtonPressed,
+                      iconSize: 48.0,
+                      color: const Color(0xFF000000),
+                    )
+                  ]
+
+              ),
+
+            )
+
+      );
+  }
+
+  void listenerButtonPressed(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListenerEventsPage()),
+    );
+  }
+
+  void djButtonPressed(){
+
+  }
+
 }
