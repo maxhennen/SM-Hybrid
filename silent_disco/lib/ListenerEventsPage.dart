@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:silent_disco/Event.dart';
 
 void main() {
   runApp(new ListenerEventsPage());
@@ -35,43 +36,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
         ),
         body:
-        new Center(
-          child:
           new Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                new Text(
-                    "Are you a DJ?"
-                ),
-                new IconButton(
-                  icon: const Icon(Icons.insert_emoticon),
-                  onPressed:djButtonPressed,
-                  iconSize: 48.0,
-                  color: const Color(0xFF000000),
-                ),
-                new Divider(color: Colors.black),
-                new Text(
-                    "Or a Listener?"
-                ),
-                new IconButton(
-                  icon: const Icon(Icons.insert_emoticon),
-                  onPressed:listenerButtonPressed,
-                  iconSize: 48.0,
-                  color: const Color(0xFF000000),
-                )
-              ]
-
+              crossAxisAlignment: CrossAxisAlignment.start,
+            children: _buildRow()
           ),
-
-        )
 
     );
   }
 
+  List<Widget> _buildRow(){
+    //Todo: Remove mock code:
+    List<ListTile> listTiles = new List<ListTile>();
+    List<Event> events = new List<Event>();
+    events.add(new Event(2300, "Summer Jam", false));
+    events.add(new Event(400, "Library Concert", false));
+    events.add(new Event(5400, "Public Bar", true));
+    //Todo: Generate events here.
+    for(int i = 0; i < events.length; i++){
+      ListTile(
+          title: Text(
+              events[i].eventName
+          ),
+          trailing: Text(
+              "Distance to Event: " +
+                  events[i].distanceFromUserInMeters.round().toString() + "m"
+          )
+      );
+    }
+    return listTiles;
+  }
+
   void listenerReturnButton(){
-      Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   void listenerButtonPressed(){
