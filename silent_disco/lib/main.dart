@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:silent_disco/ListenerEventsPage.dart';
+import 'package:silent_disco/DjSignInScreen.dart';
 
 void main() {
   runApp(new MyApp());
@@ -72,14 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void listenerButtonPressed(){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ListenerEventsPage()),
-    );
+
   }
 
   void djButtonPressed(){
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DjSignInScreen()),
+    );
   }
 
 }
