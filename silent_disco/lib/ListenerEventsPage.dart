@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:silent_disco/Event.dart';
+import 'package:silent_disco/EventChannelsPage.dart';
 
 void main() {
   runApp(new ListenerEventsPage());
 }
+
+List<Event> events = new List<Event>();
+
 class ListenerEventsPage extends StatelessWidget {
 
   @override
@@ -16,18 +20,18 @@ class ListenerEventsPage extends StatelessWidget {
         accentColor: const Color(0xFF2196f3),
         canvasColor: const Color(0xFFfafafa),
       ),
-      home: new MyHomePage(),
+      home: new MyListenerEventsPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+class MyListenerEventsPage extends StatefulWidget {
+  MyListenerEventsPage({Key key}) : super(key: key);
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyListenerEventsPageState createState() => new _MyListenerEventsPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyListenerEventsPageState extends State<MyListenerEventsPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -49,22 +53,24 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _buildRow(){
     //Todo: Remove mock code:
     List<ListTile> listTiles = new List<ListTile>();
-    List<Event> events = new List<Event>();
-    events.add(new Event(2300, "Summer Jam", false));
-    events.add(new Event(400, "Library Concert", false));
-    events.add(new Event(5400, "Public Bar", true));
+    events.clear();
+    events.add(new Event(2300, "Summer Jam", "0"));
+    events.add(new Event(400, "Library Concert", "1"));
+    events.add(new Event(5400, "Public Bar", "2"));
     //Todo: Generate events here.
-    for(int i = 0; i < events.length; i++){
-      ListTile(
+    for(Event event in events){
+      listTiles.add(new ListTile(
           title: Text(
-              events[i].eventName
+              event.name
           ),
           trailing: Text(
               "Distance to Event: " +
-                  events[i].distanceFromUserInMeters.round().toString() + "m"
-          )
-      );
-    }
+                  event.distanceFromUserInMeters.round().toString() + "m"
+          ),
+          onTap: () => eventPressed(events.indexOf(event)),
+      )
+    );
+  }
     return listTiles;
   }
 
@@ -72,12 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.pop(context);
   }
 
-  void listenerButtonPressed(){
-
-  }
-
-  void djButtonPressed(){
-
+  void eventPressed(int index){
+    if(events[index].withinRange){
+      //Todo: Switch pages.
+      print('Event within range. Navigating...');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EventChannelsPage(events[index])),
+      );
+    }
   }
 
 }
