@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'DjPlayScreen.dart';
+import 'DjPlaylistScreen.dart';
 import 'DjSignInScreen.dart';
 import 'Event.dart';
 
@@ -80,7 +80,7 @@ class _DjEventsState extends State<DjEvents> {
   void tapListTile(){
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => DjPlayScreen()),
+      MaterialPageRoute(builder: (context) => DjPlaylistScreen()),
     );
   }
 
