@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:silent_disco/Channel.dart';
+import 'package:silent_disco/ChannelSoundPage.dart';
 import 'package:silent_disco/Event.dart';
 import 'package:silent_disco/ListenerEventsPage.dart';
+import 'package:silent_disco/Song.dart';
 
 BuildContext buildContext;
 
@@ -38,11 +40,7 @@ class MyEventChannelsPage extends StatefulWidget {
 class _MyEventChannelsPageState extends State<MyEventChannelsPage> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: (){
-        listenerReturnButton(context);
-      },
-      child: new Scaffold(
+      return new Scaffold(
         appBar: new AppBar(
           title: new Text('Live channels'),
         ),
@@ -52,35 +50,33 @@ class _MyEventChannelsPageState extends State<MyEventChannelsPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: _cardBuilder()
           )
-
-      ),
     );
   }
 
   List<Widget> _cardBuilder(){
     List<GestureDetector> cardList = new List<GestureDetector>();
     List<Channel> channelList = new List<Channel>();
-    channelList.add(new Channel(Color.fromARGB(180, 255, 0, 0), "Red Channel", "0", 23));
-    channelList.add(new Channel(Color.fromARGB(180, 0, 255, 0), "Green Channel", "1", 7));
-    channelList.add(new Channel(Color.fromARGB(180, 0, 0, 255), "Blue Channel", "2", 13));
+    channelList.add(new Channel(Color.fromARGB(180, 255, 0, 0), "Red Channel", "0", 23, new Song.empty()));
+    channelList.add(new Channel(Color.fromARGB(180, 0, 255, 0), "Green Channel", "1", 7, new Song.empty()));
+    channelList.add(new Channel(Color.fromARGB(180, 0, 0, 255), "Blue Channel", "2", 13, new Song.empty()));
     for(Channel channel in channelList){
       cardList.add(new GestureDetector(
-        onTap: _cardTapped,
-        child: new Card(
-        color: channel.color,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            new ListTile(
-              leading: Icon(Icons.album, size: 50),
-              title: Text(
-                channel.name
+          child: new Card(
+          color: channel.color,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new ListTile(
+                leading: Icon(Icons.album, size: 50),
+                title: Text(
+                  channel.name
+                ),
+                subtitle: Text(channel.amountOfListeners.toString() + " Listening."),
               ),
-              subtitle: Text(channel.amountOfListeners.toString() + " Listening."),
-            ),
-          ],
+            ],
+          ),
         ),
-      )
+          onTap: () => cardTapped(channel),
       )
       );
     }
@@ -89,8 +85,14 @@ class _MyEventChannelsPageState extends State<MyEventChannelsPage> {
 
   }
 
-  _cardTapped(){
-    print('Card tapped');
+  cardTapped(Channel channel){
+    if(channel.id != null){
+      print('Card tapped: ' + channel.name);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChannelSoundPage(channel)),
+      );
+    }
 }
 
   void listenerReturnButton(context){
