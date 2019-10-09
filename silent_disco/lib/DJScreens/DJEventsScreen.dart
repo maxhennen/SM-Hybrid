@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:silent_disco/DJScreens/AddEventScreen.dart';
 
 import 'DjPlaylistScreen.dart';
 import 'DjSignInScreen.dart';
-import 'Event.dart';
+import '../DJScreens/DjEvent.dart';
 
 class DjEventsScreen extends StatelessWidget {
 
@@ -44,6 +45,15 @@ class _DjEventsState extends State<DjEvents> {
               context,
               MaterialPageRoute(builder: (context) => DjSignInScreen()),
             )),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+              onPressed: () =>  Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddEventScreen()),
+              )
+          )
+        ],
       ),
       body: new Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -56,19 +66,23 @@ class _DjEventsState extends State<DjEvents> {
 
   List<Widget> buildList(){
 
-    List<Event> eventList = new List<Event>();
+    List<DjEvent> eventList = new List<DjEvent>();
     List<ListTile> tiles = new List<ListTile>();
 
-    eventList.add(new Event(2300, "School", false));
-    eventList.add(new Event(400, "Thuis", true));
-    eventList.add(new Event(1000, "Werk", false));
+    List<String> djs = new List<String>();
+    djs.add("max@max.nl");
+    djs.add("jan@jan.nl");
 
-    for(Event event in eventList){
+    eventList.add(new DjEvent("Solar", "09-08-2020", "13:00", djs));
+    eventList.add(new DjEvent("Pinkpop", "01-07-2020", "15:00", djs));
+    eventList.add(new DjEvent("Pukkelpop", "01-06-2020", "17:00", djs));
+
+    for(DjEvent event in eventList){
       tiles.add(
           ListTile(
-            title: Text(event.eventName),
+            title: Text(event.name),
               trailing: Text(
-                "Distance to Event: " + event.distanceFromUserInMeters.round().toString() + "m"
+                "Date: " + event.date + " time: " + event.time
               ),
             onTap: () => tapListTile(),
           )

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:silent_disco/DjSignInScreen.dart';
+import 'package:silent_disco/DJScreens/DjSignInScreen.dart';
 
 void main() {
   runApp(new MyApp());
