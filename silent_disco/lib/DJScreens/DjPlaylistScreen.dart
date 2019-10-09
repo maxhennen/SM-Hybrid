@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:silent_disco/DJScreens/AudioProvider.dart';
 import 'package:silent_disco/DJScreens/DJEventsScreen.dart';
-import 'Song.dart';
-
+import 'package:audioplayer/audioplayer.dart';
+import 'package:flutter_plugin_playlist/flutter_plugin_playlist.dart';
 
 class DjPlaylistScreen extends StatelessWidget {
   @override
@@ -21,28 +22,30 @@ class DjPlaylistScreen extends StatelessWidget {
 
 class DjPlaylist extends StatefulWidget {
   DjPlaylist({Key key}) : super(key: key);
+
   @override
   _DjPlaylistScreenState createState() => new _DjPlaylistScreenState();
 }
 
-
-
 class _DjPlaylistScreenState extends State<DjPlaylist> {
-
-  static List<Song> playlist = buildPlaylist();
+  static List<AudioTrack> playlist = getPlaylist();
   List<Widget> tiles = buildList(playlist);
-  Song isNowPlaying = playlist.first;
+  static AudioTrack isNowPlaying = playlist.first;
+
+  static AudioPlayer player = new AudioPlayer();
+  static TextEditingController txtController = new TextEditingController();
+  static Text text = new Text(isNowPlaying.title + " - " + isNowPlaying.artist);
 
   @override
   Widget build(BuildContext context) {
+    txtController.text = isNowPlaying.title + " - " + isNowPlaying.artist;
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Dj playlist"),
         automaticallyImplyLeading: true,
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () =>
-                Navigator.push(
+            onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => DjEventsScreen()),
                 )),
@@ -52,62 +55,94 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
             onPressed: () => addSong(),
           )
         ],
-
       ),
       body: new Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: tiles
-      ),
+          children: tiles),
       bottomNavigationBar: new BottomAppBar(
         child: new Row(
           children: <Widget>[
             new IconButton(icon: Icon(Icons.arrow_back), onPressed: null),
-            new IconButton(icon: Icon(Icons.play_arrow), onPressed: null),
+            new IconButton(
+                icon: Icon(Icons.play_arrow),
+                onPressed: () {
+                  playBtn(isNowPlaying);
+                }),
+            new IconButton(
+                icon: Icon(Icons.pause),
+                onPressed: () {
+                  stopBtn();
+                }),
             new IconButton(icon: Icon(Icons.arrow_forward), onPressed: null),
-            new Text("Song: " + isNowPlaying.title+ ". Artist: " + isNowPlaying.artist)
+            new Flexible(
+                child: new TextField(
+              controller: txtController,
+              decoration: const InputDecoration(),
+            ))
           ],
         ),
       ),
     );
   }
 
-  static List<Widget> buildList(List<Song> playlist) {
+  static List<Widget> buildList(List<AudioTrack> playlist) {
     List<ListTile> tiles = new List<ListTile>();
 
-    for (Song song in playlist) {
-      tiles.add(
-          ListTile(
-            title: Text(song.title),
-            trailing: Text(
-                song.artist
-            ),
-            onTap: () => tapListTile(song),
-            onLongPress: () => removeSong(song),
-          )
-      );
+    for (AudioTrack track in playlist) {
+      tiles.add(ListTile(
+        title: Text(track.title),
+        trailing: Text(track.artist),
+        onTap: () => tapListTile(track),
+        onLongPress: () => removeSong(track),
+      ));
     }
     return tiles;
   }
 
-  static List<Song> buildPlaylist(){
-    List<Song> playlist = new List<Song>();
-    playlist.add(new Song("ACDC", "Thunder"));
-    playlist.add(new Song("Abba", "Mama mia"));
-    playlist.add(new Song("Greenday", "Basket case"));
-    return playlist;
+  static List<AudioTrack> getPlaylist() {
+    List<AudioTrack> tracks = new List<AudioTrack>();
+    tracks.add(new AudioTrack(
+        album: "Friends",
+        artist: "Bon Jovi",
+        assetUrl:
+            "https://www.soundboard.com/mediafiles/22/223554-d1826dea-bfc3-477b-a316-20ded5e63e08.mp3",
+        title: "I'll be there for you"));
+    tracks.add(new AudioTrack(
+        album: "Friends",
+        artist: "Ross",
+        assetUrl:
+            "https://www.soundboard.com/mediafiles/22/223554-fea5dfff-6c80-4e13-b0cf-9926198f50f3.mp3",
+        title: "The Sound"));
+    tracks.add(new AudioTrack(
+        album: "Friends",
+        artist: "Friends",
+        assetUrl:
+            "https://www.soundboard.com/mediafiles/22/223554-3943c7cb-46e0-48b1-a954-057b71140e49.mp3",
+        title: "F.R.I.E.N.D.S"));
+
+    return tracks;
   }
 
-  static void tapListTile(Song song) {
-
+  static void tapListTile(AudioTrack track) {
+    player.stop();
+    playBtn(track);
   }
 
-  static void removeSong(Song song) {
+  static void removeSong(AudioTrack track) {}
 
+  static void addSong() {}
+
+  static void playBtn(AudioTrack track) async {
+    isNowPlaying = track;
+    txtController.text = isNowPlaying.title + " - " + isNowPlaying.artist;
+    AudioProvider provider = new AudioProvider(track.assetUrl);
+    String localUrl = await provider.load();
+    player.play(localUrl, isLocal: true);
   }
 
-  static void addSong() {
-
+  void stopBtn() {
+    player.pause();
   }
 }

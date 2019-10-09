@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 
 abstract class BaseAuth {
   Future<String> signIn(String email, String password);
