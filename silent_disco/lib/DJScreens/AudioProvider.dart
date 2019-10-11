@@ -15,7 +15,7 @@ class AudioProvider {
     this.url = url;
   }
 
-  Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
+  Future<Uint8List> loadFileBytes(String url, {OnError onError}) async {
     Uint8List bytes;
     try {
       bytes = await readBytes(url);
@@ -26,7 +26,7 @@ class AudioProvider {
   }
 
   Future<String> load() async {
-    final bytes = await _loadFileBytes(url,
+    final bytes = await loadFileBytes(url,
         onError: (Exception exception) =>
             print('audio_provider.load => exception ${exception}'));
 
