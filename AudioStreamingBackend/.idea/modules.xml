@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AudioStreamingBackend.iml" filepath="$PROJECT_DIR$/.idea/AudioStreamingBackend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AudioStreamingBackend.iml" filepath="$PROJECT_DIR$/AudioStreamingBackend.iml" />
     </modules>
   </component>
 </project>
