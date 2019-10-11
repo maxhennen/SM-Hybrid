@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "427931703250",
+    "firebase_url": "https://silent-disco-b726b.firebaseio.com",
+    "project_id": "silent-disco-b726b",
+    "storage_bucket": "silent-disco-b726b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427931703250:android:db6adddd30654b94025a0b",
+        "android_client_info": {
+          "package_name": "com.example.silent_disco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "427931703250-hmlnuil0619q3luklkoffijiieoge4e8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyn7_ZL_U4obkJ1H9ZdyQNgPDP35mTCEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "427931703250-hmlnuil0619q3luklkoffijiieoge4e8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
