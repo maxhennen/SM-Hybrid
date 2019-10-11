@@ -15,20 +15,17 @@ class AudioProvider {
     this.url = url;
   }
 
-  Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
+  Future<Uint8List> loadFileBytes() async {
     Uint8List bytes;
     try {
-      bytes = await readBytes(url);
+      bytes = await readBytes(this.url);
     } on ClientException {
       rethrow;
     }
     return bytes;
   }
 
-  Future<String> load() async {
-    final bytes = await _loadFileBytes(url,
-        onError: (Exception exception) =>
-            print('audio_provider.load => exception ${exception}'));
+  Future<String> load(Uint8List bytes) async {
 
     final dir = await getApplicationDocumentsDirectory();
     final file = new File('${dir.path}/audio.mp3');

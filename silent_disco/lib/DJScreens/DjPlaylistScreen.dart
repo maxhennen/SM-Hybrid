@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:silent_disco/DJScreens/AudioProvider.dart';
 import 'package:silent_disco/DJScreens/DJEventsScreen.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter_plugin_playlist/flutter_plugin_playlist.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 class DjPlaylistScreen extends StatelessWidget {
   @override
@@ -138,11 +142,18 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
     isNowPlaying = track;
     txtController.text = isNowPlaying.title + " - " + isNowPlaying.artist;
     AudioProvider provider = new AudioProvider(track.assetUrl);
-    String localUrl = await provider.load();
+    Uint8List bytes = await provider.loadFileBytes();
+    String localUrl = await provider.load(bytes);
+    await _streamPlaylist(bytes);
     player.play(localUrl, isLocal: true);
   }
 
   void stopBtn() {
     player.pause();
+  }
+
+  static Future<void> _streamPlaylist(Uint8List bytes) async {
+    IOWebSocketChannel channel = new IOWebSocketChannel.connect("http://10.0.2.2");
+    channel.sink.add(bytes);
   }
 }
