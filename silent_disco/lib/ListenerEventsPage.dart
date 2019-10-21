@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:silent_disco/Event.dart';
 import 'package:silent_disco/EventChannelsPage.dart';
+import 'package:silent_disco/main.dart';
 
 void main() {
   runApp(new ListenerEventsPage());
@@ -37,6 +38,13 @@ class _MyListenerEventsPageState extends State<MyListenerEventsPage> {
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Events'),
+          automaticallyImplyLeading: true,
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () =>  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()),
+                ))
 
         ),
         body:

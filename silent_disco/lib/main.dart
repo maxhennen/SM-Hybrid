@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:silent_disco/DJScreens/DjSignInScreen.dart';
+import 'package:silent_disco/ListenerEventsPage.dart';
 
 void main() {
   runApp(new MyApp());
@@ -32,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('App Name'),
+        title: new Text('Silent Disco'),
 
       ),
       body:
@@ -47,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       "Are you a DJ?"
                     ),
                     new IconButton(
-                      icon: const Icon(Icons.insert_emoticon),
+                      icon: const Icon(Icons.audiotrack),
                       onPressed:djButtonPressed,
                       iconSize: 48.0,
                       color: const Color(0xFF000000),
@@ -57,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         "Or a Listener?"
                     ),
                     new IconButton(
-                      icon: const Icon(Icons.insert_emoticon),
+                      icon: const Icon(Icons.headset),
                       onPressed:listenerButtonPressed,
                       iconSize: 48.0,
                       color: const Color(0xFF000000),
@@ -72,7 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void listenerButtonPressed(){
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListenerEventsPage()),
+    );
   }
 
   void djButtonPressed(){

@@ -70,7 +70,6 @@ public class AudioStreamingServer {
                     song.add(receivePacket.getData()[i]);
                 }
             }
-
         }
 
         sourceDataLine.drain();

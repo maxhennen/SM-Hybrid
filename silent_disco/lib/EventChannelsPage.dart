@@ -43,6 +43,13 @@ class _MyEventChannelsPageState extends State<MyEventChannelsPage> {
       return new Scaffold(
         appBar: new AppBar(
           title: new Text('Live channels'),
+          automaticallyImplyLeading: true,
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () =>  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ListenerEventsPage()),
+                )),
         ),
           body: new Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -90,7 +97,7 @@ class _MyEventChannelsPageState extends State<MyEventChannelsPage> {
       print('Card tapped: ' + channel.name);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ChannelSoundPage(channel)),
+        MaterialPageRoute(builder: (context) => ChannelSoundPage(channel, selectedEvent)),
       );
     }
 }

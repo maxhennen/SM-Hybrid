@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:silent_disco/Channel.dart';
 import 'package:silent_disco/Event.dart';
+import 'package:silent_disco/EventChannelsPage.dart';
 import 'package:silent_disco/ListenerEventsPage.dart';
 
 BuildContext buildContext;
 Channel selectedChannel;
+Event selectedEvent;
 double _sliderValue = 10.0;
 
 class ChannelSoundPage extends StatelessWidget {
 
 
-  ChannelSoundPage(Channel channel){
+  ChannelSoundPage(Channel channel, Event event){
     selectedChannel = channel;
+    selectedEvent = event;
   }
 
   @override
@@ -40,8 +43,16 @@ class _MyChannelSoundPageState extends State<MyChannelSoundPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: selectedChannel.color,
           appBar: new AppBar(
             title: new Text(selectedChannel.name),
+            automaticallyImplyLeading: true,
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () =>  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EventChannelsPage(selectedEvent)),
+                  ))
           ),
       body: new Column(
           mainAxisAlignment: MainAxisAlignment.start,
