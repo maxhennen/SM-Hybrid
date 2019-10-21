@@ -164,7 +164,7 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
   static Future<void> _streamPlaylist(Uint8List bytes) async {
 
     try {
-      UDPHandler.connect("145.93.33.77", 3000, bytes, DjPlaylist().callback, DjPlaylist().callbackForGrid);
+      UDPHandler.connect(bytes);
     } catch (e) {
       print(e.toString());
     }
