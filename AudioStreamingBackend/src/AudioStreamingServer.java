@@ -1,16 +1,13 @@
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.URL;
+import java.net.*;
+import java.nio.ByteBuffer;
 import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.*;
 
 public class AudioStreamingServer {
     static AudioBroadcastingServer server;
@@ -58,12 +55,22 @@ public class AudioStreamingServer {
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 
         ByteArrayInputStream baiss = new ByteArrayInputStream(receivePacket.getData());
+        List<Byte> song = new ArrayList<>();
 
         while (status == true)
         {
             serverSocket.receive(receivePacket);
-            ais = new AudioInputStream(baiss, format, receivePacket.getLength());
-            toSpeaker(receivePacket.getData());
+
+            for(int i = 0; i < receivePacket.getData().length; i++){
+                String s = new String(receivePacket.getData());
+                if(s.equals("STOP!")){
+                    ais = new AudioInputStream(baiss, format, receivePacket.getLength());
+                    play(receivePacket.getData());
+                } else {
+                    song.add(receivePacket.getData()[i]);
+                }
+            }
+
         }
 
         sourceDataLine.drain();
@@ -73,11 +80,68 @@ public class AudioStreamingServer {
     public static void toSpeaker(byte soundbytes[]) {
         try {
             System.out.println("Broadcasting bytes to socket.");
-//            sourceDataLine.write(soundbytes, 0, soundbytes.length);
+            sourceDataLine.write(soundbytes, 0, soundbytes.length);
             server.writeData(soundbytes);
         } catch (Exception e) {
             System.out.println("Socket not working.");
             e.printStackTrace();
+        }
+    }
+
+    private static void play(byte[] data){
+        AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, (16 / 8) * 2, 44100, false);
+        TargetDataLine line;
+
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+        if (!AudioSystem.isLineSupported(info)) {
+            System.out.println("Line matching " + info + " not supported.");
+            return;
+        }
+
+        try {
+            line = (TargetDataLine) AudioSystem.getLine(info);
+
+            //TOTALLY missed this.
+//            int buffsize = line.getBufferSize() / 5;
+//            buffsize += 512;
+            int buffsize = 4096;
+
+            line.open(format);
+
+            line.start();
+
+            int numBytesRead;
+
+            InetAddress addr = InetAddress.getByName("127.0.0.1");
+            try(DatagramSocket socket = new DatagramSocket()) {
+                while (true) {
+                    for(byte b : data) System.out.print(b + " ");
+
+                    // Read the next chunk of data from the TargetDataLine.
+//                  numBytesRead = line.read(data, 0, data.length);
+
+                    for(int i = 0; i < 64; i++) {
+                        byte b = data[i];
+                        System.out.print(b + " ");
+                    }
+                    System.out.println();
+
+                    // Save this chunk of data.
+//                    DatagramPacket dgp = new DatagramPacket(data, data.length, addr, 50005);
+                    DatagramPacket dgp = new DatagramPacket(data,  data.length, addr, 50005);
+
+                    toSpeaker(dgp.getData());
+                }
+            }
+
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            // TODO: handle exception
+        } catch (SocketException e) {
+            // TODO: handle exception
+        } catch (IOException e2) {
+            // TODO: handle exception
         }
     }
 }

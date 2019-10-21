@@ -2,12 +2,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:silent_disco/DJScreens/AudioProvider.dart';
 import 'package:silent_disco/DJScreens/DJEventsScreen.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter_plugin_playlist/flutter_plugin_playlist.dart';
-import 'dart:async';
+import 'udp/udphandler.dart';
+
+typedef ConnectionCallback(Map map);
+typedef GridCallback(List<List<int>> grid,bool isYourTurn);
+
 
 class DjPlaylistScreen extends StatelessWidget {
   @override
@@ -26,7 +29,11 @@ class DjPlaylistScreen extends StatelessWidget {
 }
 
 class DjPlaylist extends StatefulWidget {
-  DjPlaylist({Key key}) : super(key: key);
+
+  final ConnectionCallback callback;
+  final GridCallback callbackForGrid;
+  DjPlaylist({this.callback,this.callbackForGrid});
+
 
   @override
   _DjPlaylistScreenState createState() => new _DjPlaylistScreenState();
@@ -50,7 +57,8 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
         automaticallyImplyLeading: true,
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.push(
+            onPressed: () =>
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => DjEventsScreen()),
                 )),
@@ -83,9 +91,9 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
             new IconButton(icon: Icon(Icons.arrow_forward), onPressed: null),
             new Flexible(
                 child: new TextField(
-              controller: txtController,
-              decoration: const InputDecoration(),
-            ))
+                  controller: txtController,
+                  decoration: const InputDecoration(),
+                ))
           ],
         ),
       ),
@@ -112,19 +120,19 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
         album: "Friends",
         artist: "Bon Jovi",
         assetUrl:
-            "https://www.soundboard.com/mediafiles/22/223554-d1826dea-bfc3-477b-a316-20ded5e63e08.mp3",
+        "https://www.soundboard.com/mediafiles/22/223554-d1826dea-bfc3-477b-a316-20ded5e63e08.mp3",
         title: "I'll be there for you"));
     tracks.add(new AudioTrack(
         album: "Friends",
         artist: "Ross",
         assetUrl:
-            "https://www.soundboard.com/mediafiles/22/223554-fea5dfff-6c80-4e13-b0cf-9926198f50f3.mp3",
+        "https://www.soundboard.com/mediafiles/22/223554-fea5dfff-6c80-4e13-b0cf-9926198f50f3.mp3",
         title: "The Sound"));
     tracks.add(new AudioTrack(
         album: "Friends",
         artist: "Friends",
         assetUrl:
-            "https://www.soundboard.com/mediafiles/22/223554-3943c7cb-46e0-48b1-a954-057b71140e49.mp3",
+        "https://www.soundboard.com/mediafiles/22/223554-3943c7cb-46e0-48b1-a954-057b71140e49.mp3",
         title: "F.R.I.E.N.D.S"));
 
     return tracks;
@@ -143,9 +151,9 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
     isNowPlaying = track;
     txtController.text = isNowPlaying.title + " - " + isNowPlaying.artist;
     AudioProvider provider = new AudioProvider(track.assetUrl);
-    String localUrl = await provider.load();
-    final Uint8List bytes = await provider.loadFileBytes(track.assetUrl);
-    await startStreaming(bytes);
+    Uint8List bytes = await provider.loadFileBytes();
+    String localUrl = await provider.load(bytes);
+    await _streamPlaylist(bytes);
     player.play(localUrl, isLocal: true);
   }
 
@@ -153,13 +161,12 @@ class _DjPlaylistScreenState extends State<DjPlaylist> {
     player.pause();
   }
 
-  static Future<void> startStreaming(Uint8List bytes) async {
-    try {
-      Socket socket = await Socket.connect("http://10.0.2.2", 50005);
-      socket.add(bytes);
+  static Future<void> _streamPlaylist(Uint8List bytes) async {
 
+    try {
+      UDPHandler.connect(bytes);
     } catch (e) {
-      rethrow;
+      print(e.toString());
     }
   }
 }

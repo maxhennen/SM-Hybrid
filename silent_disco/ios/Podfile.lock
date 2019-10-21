@@ -58,7 +58,11 @@ PODS:
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/UserDefaults (~> 6.0)
   - Flutter (1.0.0)
+  - flutter_audio_recorder (0.4.5):
+    - Flutter
   - flutter_plugin_playlist (0.0.1):
+    - Flutter
+  - flutter_sound (0.0.1):
     - Flutter
   - GoogleAppMeasurement (6.1.2):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
@@ -104,7 +108,9 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_audio_recorder (from `.symlinks/plugins/flutter_audio_recorder/ios`)
   - flutter_plugin_playlist (from `.symlinks/plugins/flutter_plugin_playlist/ios`)
+  - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
 
 SPEC REPOS:
@@ -137,8 +143,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_database/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_audio_recorder:
+    :path: ".symlinks/plugins/flutter_audio_recorder/ios"
   flutter_plugin_playlist:
     :path: ".symlinks/plugins/flutter_plugin_playlist/ios"
+  flutter_sound:
+    :path: ".symlinks/plugins/flutter_sound/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
 
@@ -157,7 +167,9 @@ SPEC CHECKSUMS:
   FirebaseDatabase: 518cd94286de2ee999e19383a2a6ae04c81ce993
   FirebaseInstanceID: 550df9be1f99f751d8fcde3ac342a1e21a0e6c42
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_audio_recorder: d44a21331c96ce09be664cdfe1db54a58951fdf1
   flutter_plugin_playlist: 245f862b09e56e2b374810baaa8be4c83cb094cb
+  flutter_sound: 0e8163ceac1e00eb6d894e2ae4641ba726a2c479
   GoogleAppMeasurement: 0ae90be1cc4dad40f4a27fc767ef59fa032ec87b
   GoogleDataTransport: c8617c00e4f3eb9418e42ac0e8ac5241a9d555dd
   GoogleDataTransportCCTSupport: 9f352523e8785a71f6754f51eeff09f49ec19268
